@@ -1,0 +1,17 @@
+server:
+  error:
+    include-message: ALWAYS
+    include-exception: false
+    whitelabel:
+      enabled: false
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  mvc:
+    throw-exception-if-no-handler-found: true
+
+config:
+  base-url: "https://api.github.com"
+  users: "/users/%s"
+  repositories: "/user/repos"
+  branches: "/repos/%s/%s/branches"

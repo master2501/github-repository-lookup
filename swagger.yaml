@@ -1,0 +1,33 @@
+openapi: 3.0.0
+info:
+  title: GitHub lookup API
+  description: |
+    This API allows you to retrieves all repositories and related branches for the specified user.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /api/v1/repositories:
+    get:
+      summary: Validate if a GitHub user exists
+      description: Validates if the specified GitHub user exists.
+      parameters:
+        - in: path
+          name: username
+          required: true
+          description: The GitHub username to perform the operation.
+          schema:
+            type: string
+        - in: header
+          name: token
+          required: true
+          description: Token for GitHub API authentication.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lists all the repositories and related branches
+        '404':
+          description: User not found
+        '500':
+          description: Error retrieving repository information

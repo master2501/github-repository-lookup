@@ -4,8 +4,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.tui</groupId>
-	<artifactId>github-repository-lookup</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>github-repository-service</artifactId>
+	<version>1.0.0</version>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -54,6 +54,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-
 </project>

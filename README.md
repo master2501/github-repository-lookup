@@ -2,6 +2,10 @@
 # Github-repository-lookup
 
 This project retrieves repository information, and related branches, for a given username.
+# Required dependencies
+- Maven
+- Git
+- JDK 1.8
 
 # How to clone this project
 

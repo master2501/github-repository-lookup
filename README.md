@@ -6,7 +6,7 @@ This project retrieves repository information, and related branches, for a given
 # How to clone this project
 
 To clone the project, just run the following command in the command-line:
-- git clone git...full...url...github-repository-lookup.git
+- git clone https://github.com/master2501/github-repository-lookup.git
 
 # How to build the project
 

@@ -2,7 +2,6 @@ package com.tui.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -17,9 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class GithubLookupServiceImpl implements GithubLookupService {
+	private final GithubOperationsService githubOperationsService;
 
-	@Autowired
-	private GithubOperationsService githubOperations;
+	public GithubLookupServiceImpl(GithubOperationsService githubOperationsService) {
+		this.githubOperationsService = githubOperationsService;
+	}
 
 	@Override
 	public RepositoryInfo getRepositoryInfo(String username, String token) throws ApiException {
@@ -28,12 +29,13 @@ public class GithubLookupServiceImpl implements GithubLookupService {
 
 		// check if user exists
 		log.debug("Checking if user '{}' exists", username);
-		githubOperations.checkUserExists(username, token);
+		githubOperationsService.checkUserExists(username, token);
 
 		// get all repositories
 		// forked repositories are filtered
 		log.debug("Checking if user '{}' exists", username);
-		List<Repository> repositories = githubOperations.getRepositories(username, token);
+		List<Repository> repositories = githubOperationsService.getRepositories(username, token);
+		Preconditions.checkState(repositories != null, "Repositories cannot be null");
 		log.debug("User '{}' has '{}' repositories", username, repositories.size());
 
 		// get branches for each repository
@@ -41,7 +43,7 @@ public class GithubLookupServiceImpl implements GithubLookupService {
 		for (Repository repository : repositories) {
 			// get all the branches for a given repository
 			log.debug("Retrieving branches for repository '{}'", repository.getName());
-			List<Branch> branches = githubOperations.getBranches(username, token, repository.getName());
+			List<Branch> branches = githubOperationsService.getBranches(username, token, repository.getName());
 			log.trace("Number of branches found '{}', for repository '{}'", branches == null ? 0 : branches.size(),
 					repository.getName());
 

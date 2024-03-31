@@ -26,3 +26,32 @@ To build the docker image, please use the following command:
 # How to run the docker image
 To run the docker image, run the following command:
 - docker run -p 8080:8080 github-repository-service
+
+# How to make a request, via postman, to retrieve all the repositories for a given user
+To make a request using postman, please use the following command:
+
+1) Define the headers:
+- Accept: application/json
+- username: <username>
+- token: <token>
+
+2) Define the http method to 'GET'
+3) Define the url as 'localhost:8080/api/v1/repository'
+4) press send and check the response
+
+# How to make a request, via wget, to retrieve all the repositories for a given user
+wget --no-check-certificate --quiet \
+  --method GET \
+  --timeout=0 \
+  --header 'Accept: application/json' \
+  --header 'username: <username>' \
+  --header 'token: <token>' \
+   'localhost:8080/api/v1/repository'
+
+# How to make a request, via curl, to retrieve all the repositories for a given user
+curl --location 'localhost:8080/api/v1/repository' \
+--header 'Accept: application/json' \
+--header 'username: <username>' \
+--header 'token: <token>'
+
+

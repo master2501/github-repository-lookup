@@ -32,8 +32,8 @@ To make a request using postman, please use the following command:
 
 1) Define the headers:
 - Accept: application/json
-- username: <username>
-- token: <token>
+- username: _username_
+- token: _token_
 
 2) Define the http method to 'GET'
 3) Define the url as 'localhost:8080/api/v1/repository'
@@ -44,14 +44,14 @@ wget --no-check-certificate --quiet \
   --method GET \
   --timeout=0 \
   --header 'Accept: application/json' \
-  --header 'username: <username>' \
-  --header 'token: <token>' \
+  --header 'username: _username_' \
+  --header 'token: _token_' \
    'localhost:8080/api/v1/repository'
 
 # How to make a request, via curl, to retrieve all the repositories for a given user
 curl --location 'localhost:8080/api/v1/repository' \
 --header 'Accept: application/json' \
---header 'username: <username>' \
---header 'token: <token>'
+--header 'username: _username_' \
+--header 'token: _token_'
 
 

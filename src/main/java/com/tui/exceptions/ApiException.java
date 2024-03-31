@@ -1,5 +1,8 @@
 package com.tui.exceptions;
 
+/**
+ * Api Exception abstract class
+ */
 public abstract class ApiException extends Exception {
 	private static final long serialVersionUID = -8670121268019169960L;
 

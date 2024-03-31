@@ -12,7 +12,7 @@ paths:
       summary: Validate if a GitHub user exists
       description: Validates if the specified GitHub user exists.
       parameters:
-        - in: path
+        - in: header
           name: username
           required: true
           description: The GitHub username to perform the operation.
@@ -29,5 +29,7 @@ paths:
           description: Lists all the repositories and related branches
         '404':
           description: User not found
+        '406':
+          description: Could not find acceptable representation
         '500':
           description: Error retrieving repository information

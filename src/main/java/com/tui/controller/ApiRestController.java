@@ -16,6 +16,9 @@ import com.tui.service.GithubLookupService;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Api rest controller
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/v1")

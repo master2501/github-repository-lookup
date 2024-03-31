@@ -8,10 +8,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.common.base.Preconditions;
 import com.tui.config.RepositoryConfig;
 import com.tui.domains.github.Branch;
 import com.tui.domains.github.Repository;
@@ -24,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class GithubOperationsImpl implements GithubOperations {
+public class GithubOperationsServiceImpl implements GithubOperationsService {
 	private static final ParameterizedTypeReference<List<Repository>> REPOSITORIES_LIST = new ParameterizedTypeReference<List<Repository>>() {
 	};
 	private static final ParameterizedTypeReference<List<Branch>> BRANCHES_LIST = new ParameterizedTypeReference<List<Branch>>() {
@@ -32,31 +34,39 @@ public class GithubOperationsImpl implements GithubOperations {
 	private final RepositoryConfig config;
 	private final RestTemplate restTemplate;
 
-	public GithubOperationsImpl(RepositoryConfig config, RestTemplate restTemplate) {
+	public GithubOperationsServiceImpl(RepositoryConfig config, RestTemplate restTemplate) {
 		this.config = config;
 		this.restTemplate = restTemplate;
 	}
 
 	@Override
 	public void checkUserExists(String username, String token) throws ApiException {
+		Preconditions.checkArgument(StringUtils.hasText(username), "Invalid 'username' value parameter");
+		Preconditions.checkArgument(StringUtils.hasText(token), "Invalid 'token' value parameter");
 
+		// prepare url
 		final String url = String.format(config.getUsersUrl(), username);
-		log.debug("Checking username using {} ", url);
+		log.trace("Checking username using url {} ", url);
 
 		try {
-			String response = restTemplate.exchange(url, HttpMethod.GET, createEntity(token), String.class).getBody();
-			System.err.println(response);
+			restTemplate.exchange(url, HttpMethod.GET, createEntity(token), String.class).getBody();
 		} catch (HttpClientErrorException.NotFound e) {
 			log.error("User '{}' not exists: {}", username, e.getMessage());
 			throw new UserNotFoundException(String.format("User '%s' not exists", username));
+		} catch (RestClientException e) {
+			log.error("Error checking if the user '{}' exists due to {}", username, e.getMessage());
+			throw e;
 		}
 	}
 
 	@Override
-	public List<Branch> getBranches(String username, String token, String repositoryName) {
+	public List<Branch> getBranches(String username, String token, String repositoryName) throws ApiException {
+		Preconditions.checkArgument(StringUtils.hasText(username), "Invalid 'username' value parameter");
+		Preconditions.checkArgument(StringUtils.hasText(token), "Invalid 'token' value parameter");
 
+		// prepare url
 		final String url = String.format(config.getBranchesUrl(), username, repositoryName);
-		log.debug("Reading branches from {}", url);
+		log.trace("Reading branches using url {}", url);
 
 		List<Branch> branches = null;
 		try {
@@ -72,10 +82,13 @@ public class GithubOperationsImpl implements GithubOperations {
 	}
 
 	@Override
-	public List<Repository> getRepositories(String username, String token, boolean filterForks) {
+	public List<Repository> getRepositories(String username, String token, boolean filterForks) throws ApiException {
+		Preconditions.checkArgument(StringUtils.hasText(username), "Invalid 'username' value parameter");
+		Preconditions.checkArgument(StringUtils.hasText(token), "Invalid 'token' value parameter");
 
+		// prepare url
 		final String url = config.getRepositoriesUrl();
-		log.debug("Reading repositories from {}", url);
+		log.trace("Reading repositories using url {}", url);
 
 		List<Repository> repositories = null;
 		try {
@@ -86,6 +99,7 @@ public class GithubOperationsImpl implements GithubOperations {
 			throw e;
 		}
 
+		// filter forked repositories
 		if (filterForks) {
 			repositories.removeIf(r -> r.isFork());
 		}
@@ -93,7 +107,13 @@ public class GithubOperationsImpl implements GithubOperations {
 		return repositories;
 	}
 
-	protected static HttpEntity<String> createEntity(String token) {
+	/**
+	 * Create the http entity including the authorization header
+	 * 
+	 * @param token the token used for authorization
+	 * @return the http entity object
+	 */
+	private static HttpEntity<String> createEntity(String token) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set(HeaderConstants.AUTHORIZATION, HeaderConstants.BEARER + token);

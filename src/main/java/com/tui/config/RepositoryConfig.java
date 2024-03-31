@@ -13,15 +13,15 @@ public class RepositoryConfig {
 	private String users;
 	private String repositories;
 	private String branches;
-	
+
 	public String getUsersUrl() {
 		return baseUrl + users;
 	}
-	
+
 	public String getRepositoriesUrl() {
 		return baseUrl + repositories;
 	}
-	
+
 	public String getBranchesUrl() {
 		return baseUrl + branches;
 	}

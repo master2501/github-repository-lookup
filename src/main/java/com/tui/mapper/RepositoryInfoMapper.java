@@ -9,7 +9,7 @@ import com.tui.dto.RepositoryInfoDto;
 @Component
 public class RepositoryInfoMapper extends AbstractMapper<RepositoryInfo, RepositoryInfoDto> {
 
-	protected RepositoryInfoMapper(ModelMapper modelMapper) {
+	public RepositoryInfoMapper(ModelMapper modelMapper) {
 		super(modelMapper);
 	}
 
@@ -17,5 +17,4 @@ public class RepositoryInfoMapper extends AbstractMapper<RepositoryInfo, Reposit
 	public RepositoryInfoDto convertTo(RepositoryInfo repositoryInfo) {
 		return modelMapper.map(repositoryInfo, RepositoryInfoDto.class);
 	}
-
 }
